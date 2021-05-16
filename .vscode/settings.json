@@ -1,0 +1,20 @@
+{
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestPath": "D:\\Windows\\Programs\\Python3\\Scripts",
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.autoTestDiscoverOnSaveEnabled": false,
+    "python.testing.cwd": null,
+    "python.testing.debugPort": 3000,
+    "python.testing.promptToConfigure": true,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "*test*.py"
+    ]
+}

@@ -1,0 +1,14 @@
+    {
+        "firstname": "Max",
+        "lastname": "Mustermann",
+        "birthdate": "01-01-1994",
+        "email": "max.mustermann@web.de",
+        "mobile": "+491234546789",
+        "tariff": "Normal",
+        "city": "Musterstadt",
+        "street": "Musterstraße 23",
+        "plz": "01234",
+        "startDate": "19",
+        "slot": 41,
+        "slotTime": "18:30 - 20:00"
+    }

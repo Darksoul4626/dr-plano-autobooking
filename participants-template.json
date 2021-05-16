@@ -1,0 +1,16 @@
+[
+    {
+        "firstname": "Manuela",
+        "lastname": "Musterfrau",
+        "birthdate": "01.01.1995",
+        "email": "manuela.musterfrau@web.de",
+        "tariff": "Normal"
+    },
+    {
+        "firstname": "Max",
+        "lastname": "Mustermann",
+        "birthdate": "01.01.1995",
+        "email": "max.mustermann@gmx.de",
+        "tariff": ""
+    }
+]
