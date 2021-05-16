@@ -44,9 +44,8 @@ class TestDynochromBooking():
         print("Setup method")
 
         load_dotenv()
-        self.driverPATH = os.getenv("DRIVERPATH")
-        print(self.driverPATH)
-        self.driver = webdriver.Chrome(executable_path=self.driverPATH)
+        print(os.getenv("DRIVERPATH"))
+        self.driver = webdriver.Chrome(executable_path=os.getenv("DRIVERPATH"))
         self.wait = WebDriverWait(self.driver, 10)
         self.vars = {}
 
@@ -58,7 +57,7 @@ class TestDynochromBooking():
         # try:6
         print("Run booking...")
         # Open booking page
-        self.driver.get("https://dynochrom.com/90-minuten-bouldern/")
+        self.driver.get(os.getenv('URL'))
         # resize window
         self.driver.set_window_size(1936, 1066)
 
@@ -196,12 +195,14 @@ class TestDynochromBooking():
             participantNumber += 1
 
             if(participantNumber is maxPeople):
-                print(
-                    "The following participants were not added, because of the maximum per slot reached: ")
 
-                for p in file[maxPeople:]:
-                    print(p['firstname'] + " " +
-                          p['lastname'])
+                if(len(file[maxPeople:]) == 0):
+                    print(
+                        "The following participants were not added, because of the maximum per slot reached: ")
+
+                    for p in file[maxPeople:]:
+                        print(p['firstname'] + " " +
+                              p['lastname'])
                 return
 
             WebDriverExtensions.WaitOnElement(
