@@ -1,19 +1,16 @@
 
 
-from copy import Error
-from enum import Enum
-from typing import Text
-from helper.fileReader import FileReader
-import re
-
-from selenium.webdriver.common.by import By
-from helper.webDriverExtensions import WebDriverExtensions
 import os
+import re
+from enum import Enum
 
 from dotenv import load_dotenv
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
+from src.helper.fileReader import FileReader
+from src.helper.webDriverExtensions import WebDriverExtensions
 
 
 class TariffOptions(Enum):
@@ -31,6 +28,7 @@ class Booking():
         self.participantsFilePath = os.getenv("PARTICIPANTS_FILE_PATH")
         self.driverPath = os.getenv("DRIVERPATH")
         self.url = os.getenv('URL')
+        self.successful = False
 
     def initBrowser(self):
         """Inits the webdriver and set some pre settings.
@@ -49,25 +47,31 @@ class Booking():
         self.driver.get(self.url)
 
     def startBooking(self):
-        print("Start booking...")
+        try:
+            print("Start booking...")
 
-        # read base config file as json
-        baseDataJson = FileReader.readFile(self.baseDataFilePath)
+            # read base config file as json
+            baseDataJson = FileReader.readFile(self.baseDataFilePath)
 
-        # set start date
-        self.__setStartDate__(baseDataJson['startDate'])
-        # select the prefered slot number
-        maxPeople = self.__selectSlot__(baseDataJson)
-        # fill out base formular
-        self.__fillBaseData__(baseDataJson)
-        # add friends to the booking formular
-        self.__addParticipants__(maxPeople, baseDataJson['selfBooking'])
-        # go to payment
-        self.__goToPayment__()
-        print("Booking has finished!")
+            # set start date
+            self.__setStartDate__(baseDataJson['startDate'])
+            # select the prefered slot number
+            maxPeople = self.__selectSlot__(baseDataJson)
+            # fill out base formular
+            self.__fillBaseData__(baseDataJson)
+            # add friends to the booking formular
+            self.__addParticipants__(maxPeople, baseDataJson['selfBooking'])
+            # go to payment
+            self.__goToPayment__()
+
+            self.successful = True
+            print("Booking has finished!")
+        except Exception as ex:
+            print(ex)
 
     def endBooking(self):
-        self.driver.quit()
+        print("End")
+        # self.driver.quit()
 
     def __goToPayment__(self):
         # Forward to payment
@@ -227,4 +231,4 @@ class Booking():
                     self.wait, By.CSS_SELECTOR, "button.drp-mt-2.drp-course-booking-add-participant").click()
 
         except Exception as ex:
-            print(ex)
+            raise ex

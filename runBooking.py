@@ -1,4 +1,4 @@
-from businesslogic.booking import Booking
+from src.businesslogic.booking import Booking
 
 
 def __init__():
