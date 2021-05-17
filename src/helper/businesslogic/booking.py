@@ -9,7 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
-from src.helper.fileReader import FileReader
+from src.helper.fileReader import FileExtensions
 from src.helper.webDriverExtensions import WebDriverExtensions
 
 
@@ -49,7 +49,7 @@ class Booking():
         print("Start booking...")
 
         # read base config file as json
-        baseDataJson = FileReader.readFile(self.baseDataFilePath)
+        baseDataJson = FileExtensions.readFile(self.baseDataFilePath)
 
         # set start date
         self.__setStartDate__(baseDataJson['startDate'])
@@ -154,7 +154,7 @@ class Booking():
 
     def __addParticipants__(self, maxPeople, selfBooking):
         try:
-            file = FileReader.readFile(self.participantsFilePath)
+            file = FileExtensions.readFile(self.participantsFilePath)
 
             if(len(file) == 0):
                 return

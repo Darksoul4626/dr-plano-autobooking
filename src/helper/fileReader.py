@@ -1,9 +1,10 @@
 
 
 import json
+import os
 
 
-class FileReader:
+class FileExtensions:
 
     @staticmethod
     def readFile(path, fileType='json'):
@@ -18,3 +19,7 @@ class FileReader:
         }
 
         return options[fileType]
+
+    @staticmethod
+    def fileExists(path) -> bool:
+        return os.path.exists(path)

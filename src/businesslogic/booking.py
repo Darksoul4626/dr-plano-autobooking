@@ -2,6 +2,8 @@
 
 import os
 import re
+from datetime import datetime
+import time
 from enum import Enum
 
 from dotenv import load_dotenv
@@ -9,8 +11,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
-from src.helper.fileReader import FileReader
+from src.helper.fileReader import FileExtensions
 from src.helper.webDriverExtensions import WebDriverExtensions
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class TariffOptions(Enum):
@@ -37,7 +40,7 @@ class Booking():
         self.driver = webdriver.Chrome(executable_path=self.driverPath)
         self.wait = WebDriverWait(self.driver, 10)
         # resize window
-        self.driver.set_window_size(1936, 1066)
+        self.driver.maximize_window()
 
     def openPage(self):
         """Opens the page with content of env-variable 'url' 
@@ -51,7 +54,7 @@ class Booking():
             print("Start booking...")
 
             # read base config file as json
-            baseDataJson = FileReader.readFile(self.baseDataFilePath)
+            baseDataJson = FileExtensions.readFile(self.baseDataFilePath)
 
             # set start date
             self.__setStartDate__(baseDataJson['startDate'])
@@ -59,11 +62,27 @@ class Booking():
             maxPeople = self.__selectSlot__(baseDataJson)
             # fill out base formular
             self.__fillBaseData__(baseDataJson)
+
+            self.__makeScreenshot__('./orders/basedata_{}.png')
             # add friends to the booking formular
             self.__addParticipants__(maxPeople, baseDataJson['selfBooking'])
-            # go to payment
-            self.__goToPayment__()
+            self.__makeScreenshot__('./orders/friends_{}.png')
 
+            # go to payment
+            # self.__goToPayment__()
+            self.driver.execute_script("""
+            var addMessage = document.createElement('div');
+            addMessage.style = 'background-color:green;font-color:black;font-size:24px;font-weight:bold;text-align:center;color:white';
+            addMessage.textContent = 'Please enter your prefered payment option and finished by paying.';            
+            
+            document.querySelector('button.drp-course-booking-continue.drp-mt-4').parentElement.append(addMessage);""")
+
+            element = WebDriverExtensions.WaitOnElement(
+                self.wait, By.CSS_SELECTOR, "button.drp-course-booking-continue.drp-mt-4")
+            actions = ActionChains(self.driver)
+            actions.move_to_element(element).perform()
+
+            self.wait_until(300)
             self.successful = True
             print("Booking has finished!")
         except Exception as ex:
@@ -71,13 +90,44 @@ class Booking():
 
     def endBooking(self):
         print("End")
-        # self.driver.quit()
+        self.driver.quit()
+
+    def wait_until(self, timeout, period=0.5):
+        mustend = time.time() + timeout
+        while time.time() < mustend:
+            time.sleep(period)
 
     def __goToPayment__(self):
         # Forward to payment
         WebDriverExtensions.WaitOnElement(self.wait,
                                           By.CSS_SELECTOR, "button.drp-course-booking-continue.drp-mt-4").click()
         self.driver.execute_script("window.scrollTo(0,518)")
+
+    def __makeScreenshot__(self, path):
+
+        currentDateString = "{0}-{1}-{2}".format(
+            datetime.now().year, datetime.now().month, datetime.now().day)
+        fileCounter = 0
+        a = 0
+        while a <= 10:
+            try:
+                if not FileExtensions.fileExists(path.format(currentDateString)):
+                    self.driver.save_screenshot(
+                        path.format(currentDateString))
+                    break
+                elif FileExtensions.fileExists(path.format(currentDateString)):
+                    self.driver.save_screenshot(
+                        path.format(currentDateString)+'_{0}'.format(fileCounter))
+                    break
+                elif not FileExtensions.fileExists(path.format(currentDateString)+'_{0}'.format(fileCounter)):
+                    self.driver.save_screenshot(
+                        path.format(currentDateString)+'_{0}'.format(fileCounter))
+                    break
+            except Exception as ex:
+                print(ex)
+
+            fileCounter += 1
+            a += 1
 
     def __fillBaseData__(self, baseData):
         print("----------  base data  ----------")
@@ -161,7 +211,7 @@ class Booking():
 
     def __addParticipants__(self, maxPeople, selfBooking):
         try:
-            file = FileReader.readFile(self.participantsFilePath)
+            file = FileExtensions.readFile(self.participantsFilePath)
 
             if(len(file) == 0):
                 return
