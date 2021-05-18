@@ -1,3 +1,9 @@
+# custom
+allfriends.json
+baseData.json
+currentParticipants.json
+ 
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

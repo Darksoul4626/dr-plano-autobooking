@@ -2,6 +2,7 @@
 
 import json
 import os
+from pathlib import Path
 
 
 class FileExtensions:
@@ -21,5 +22,7 @@ class FileExtensions:
         return options[fileType]
 
     @staticmethod
-    def fileExists(path) -> bool:
+    def fileExists(path: str) -> bool:
+        onlyDirectoryPath = os.path.dirname(path)
+        Path(onlyDirectoryPath).mkdir(parents=True, exist_ok=True)
         return os.path.exists(path)
