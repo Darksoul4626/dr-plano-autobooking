@@ -12,6 +12,8 @@
 * Execute tests by entering ```pytest ./tests/test_dynochromBooking.py``` on your prefered commandline
 
 # Execute automatic booking
+If the ```.env```, ```baseData.json``` and ```participants.json``` files filled out, you are ready to start.
+ 
 1. Run ```py runBooking.py``` to start the booking until the payment page is visible.
 2. Enter your payment info. 
 3. You just finished your booking ! :) 
