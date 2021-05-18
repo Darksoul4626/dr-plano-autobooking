@@ -1,4 +1,5 @@
 - implement automatic payment process for paypal
+    - implement automatic payment process for other providers
 - open screenshots if booking is successful 
 - add env variable to save booking screenshots
  
