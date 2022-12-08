@@ -1,5 +1,6 @@
 ## Requirements
 * Installing selenium (pip install selenium)
+* Installing dotenv (pip install python-dotenv)
 * Download the related webdriver version for your preferred browser on https://selenium-python.readthedocs.io/installation.html#drivers 
     * edit the DRIVERPATH in the '.env'-file to the preferred webdriver.exe
 
