@@ -115,13 +115,9 @@ class Booking():
                     self.driver.save_screenshot(
                         path.format(currentDateString))
                     break
-                elif FileExtensions.fileExists(path.format(currentDateString)):
+                elif not FileExtensions.fileExists(path.format(currentDateString+'_{0}'.format(fileCounter))):
                     self.driver.save_screenshot(
-                        path.format(currentDateString)+'_{0}'.format(fileCounter))
-                    break
-                elif not FileExtensions.fileExists(path.format(currentDateString)+'_{0}'.format(fileCounter)):
-                    self.driver.save_screenshot(
-                        path.format(currentDateString)+'_{0}'.format(fileCounter))
+                        path.format(currentDateString+'_{0}'.format(fileCounter)))
                     break
             except Exception as ex:
                 print(ex)
